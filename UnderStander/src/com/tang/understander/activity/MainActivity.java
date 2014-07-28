@@ -1,4 +1,6 @@
-package com.tang.understander;
+package com.tang.understander.activity;
+
+import com.tang.understander.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
