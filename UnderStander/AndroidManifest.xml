@@ -71,7 +71,7 @@
         
         
         <activity
-            android:name="com.tang.understander.MainActivity"
+            android:name="com.tang.understander.activity.MainActivity"
             android:label="@string/app_name" >
         </activity>
     </application>
