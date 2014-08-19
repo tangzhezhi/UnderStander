@@ -74,6 +74,13 @@
             android:name="com.tang.understander.activity.MainActivity"
             android:label="@string/app_name" >
         </activity>
+        
+       <activity
+            android:name="com.tang.understander.activity.DayHaveStorysActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+          	>
+        </activity>
     </application>
 
 </manifest>

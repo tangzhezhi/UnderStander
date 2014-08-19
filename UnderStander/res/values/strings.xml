@@ -2,10 +2,18 @@
 <resources>
 
     <string name="app_name">懂</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
 	<string name="title">懂</string>
 	
-	
+	<string name="image_content">Image</string>
+	 
+	<!-- 新鲜事 -->
+	<string name="novelty">新鲜事</string>
+	<!-- 幽默 -->
+	<string name="humor">小开心</string>
 	<!-- 邪恶宝典 -->
+	<string name="bad_idea">恶搞</string>
+
+	
 	
 </resources>
