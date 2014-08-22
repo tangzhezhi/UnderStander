@@ -52,4 +52,18 @@
         <item name="android:textColor">#ffffffff</item>
         <item name="android:textSize">14sp</item>
     </style>
+    
+   <!-- 时间tip风格 -->	
+   <style name="TimeTipsUI">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@drawable/tips_bg</item>
+        <item name="android:paddingBottom">2.0dip</item>
+        <item name="android:paddingLeft">5.0dip</item>
+        <item name="android:paddingRight">5.0dip</item>
+        <item name="android:paddingTop">2.0dip</item>
+        <item name="android:textColor">@color/background_normal</item>
+        <item name="android:textSize">@dimen/normal_text</item>
+    </style>
 </resources>
