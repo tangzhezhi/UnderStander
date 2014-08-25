@@ -1,8 +1,12 @@
 package com.tang.understander.fragment;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.http.Header;
+import org.apache.http.entity.StringEntity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,18 +19,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.tang.understander.R;
 import com.tang.understander.adapter.NoveltyListAdapter;
 import com.tang.understander.common.AppConstant;
 import com.tang.understander.entity.Novelty;
-import com.tang.understander.rest.GsonRequest;
 import com.tang.understander.rest.dto.NoveltyDTO;
 import com.tang.understander.utils.DateTimeUtil;
 import com.tang.understander.view.DropDownListView;
+import com.tang.understander.view.DropDownListView.OnDropDownListener;
 
 
 public class NoveltyFragment  extends Fragment {
@@ -72,7 +77,11 @@ public class NoveltyFragment  extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		initData();
+		try {
+			initData();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
     @Override
@@ -96,41 +105,77 @@ public class NoveltyFragment  extends Fragment {
 	}
 
 	
-	private void initData() {
+	private void initData() throws UnsupportedEncodingException {
 		postRequest();
 	}
 	
-	
-	private void postRequest(){
+	private void postRequest() throws UnsupportedEncodingException{
 		
 		Map<String,String> m = new HashMap<String,String>();
 		
 		 Gson gson = new Gson();
 		 NoveltyDTO dto = new NoveltyDTO();
-         dto.setEntityType("Novelty");
+         dto.setEntityType("query_novelty");
          dto.setTag("Novelty");
          dto.setUpdateTime(DateTimeUtil.getYmd());
          String requeststr = gson.toJson(dto);
 		 m.put("content", requeststr);
 		
+		 RequestParams params = new RequestParams();
+		 params.setContentEncoding("utf-8");
+		 
+		 params.put("content", requeststr);
+		 
+		 AsyncHttpClient client = new AsyncHttpClient();
+		 StringEntity stringEntity = new StringEntity(requeststr);  
+		 client.post(getActivity(),AppConstant.BASE_URL, stringEntity, "application/json", new AsyncHttpResponseHandler(){
+
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+					Throwable arg3) {
+				
+			}
+
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				
+			}
+				 
+		});
+		 
+		 
+//		GsonRequest<Novelty> gsonRequest = new GsonRequest<Novelty>(  
+//				AppConstant.BASE_URL, Novelty.class, m,
+//		         new Response.Listener<Novelty>() {  
+//		            @Override  
+//		            public void onResponse(Novelty novelty) {  
+//		            	 Log.d("NoveltyFragment", "return msg::: ");  
+////		                WeatherInfo weatherInfo = weather.getWeatherinfo();  
+////		                Log.d("TAG", "city is " + weatherInfo.getCity());  
+////		                Log.d("TAG", "temp is " + weatherInfo.getTemp());  
+////		                Log.d("TAG", "time is " + weatherInfo.getTime());  
+//		            }  
+//		        }, new Response.ErrorListener() {  
+//		            @Override  
+//		            public void onErrorResponse(VolleyError error) {  
+//		                Log.e("TAG", error.getMessage(), error);  
+//		            }  
+//		        });  
+//		requestQueue.add(gsonRequest);  
+	}
+	
+	
+	private void showMsgUi(){
+		lvNoveltyList = (DropDownListView) mView.findViewById(R.id.lv_list);
+		mAdapter = new NoveltyListAdapter(mView.getContext(), noveltyList);
+		lvNoveltyList.setAdapter(mAdapter);
+		lvNoveltyList.setOnDropDownListener(new OnDropDownListener() {
+			@Override
+			public void onDropDown() {
+				Log.d(TAG, "下拉点击");
+			}});
 		
-		GsonRequest<Novelty> gsonRequest = new GsonRequest<Novelty>(  
-				AppConstant.BASE_URL, Novelty.class, m,
-		         new Response.Listener<Novelty>() {  
-		            @Override  
-		            public void onResponse(Novelty novelty) {  
-//		                WeatherInfo weatherInfo = weather.getWeatherinfo();  
-//		                Log.d("TAG", "city is " + weatherInfo.getCity());  
-//		                Log.d("TAG", "temp is " + weatherInfo.getTemp());  
-//		                Log.d("TAG", "time is " + weatherInfo.getTime());  
-		            }  
-		        }, new Response.ErrorListener() {  
-		            @Override  
-		            public void onErrorResponse(VolleyError error) {  
-		                Log.e("TAG", error.getMessage(), error);  
-		            }  
-		        });  
-		requestQueue.add(gsonRequest);  
+		mAdapter.notifyDataSetChanged();
 	}
 
 	

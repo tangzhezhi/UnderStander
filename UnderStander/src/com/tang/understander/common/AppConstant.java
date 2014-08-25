@@ -1,7 +1,7 @@
 package com.tang.understander.common;
 
 public class AppConstant {
-	public static final String BASE_URL = "http://localhost:9999/";
+	public static final String BASE_URL = "http://192.168.1.101:9999/";
 	public static final int DEFAULT_PAGESIZE = 15;
 	
 	public static final class Ack {
