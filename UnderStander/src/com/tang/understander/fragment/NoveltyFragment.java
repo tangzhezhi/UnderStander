@@ -1,20 +1,8 @@
 package com.tang.understander.fragment;
 
 import java.util.ArrayList;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
-import com.tang.understander.R;
-import com.tang.understander.adapter.NoveltyListAdapter;
-import com.tang.understander.common.AppConstant;
-import com.tang.understander.entity.Novelty;
-import com.tang.understander.rest.MyStringRequest;
-import com.tang.understander.rest.RequestController;
-import com.tang.understander.rest.dto.QueryNoveltyReq;
-import com.tang.understander.rest.dto.QueryNoveltyResp;
-import com.tang.understander.utils.DateTimeUtil;
-import com.tang.understander.view.DropDownListView;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +13,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.tang.understander.R;
+import com.tang.understander.adapter.NoveltyListAdapter;
+import com.tang.understander.common.AppConstant;
+import com.tang.understander.entity.Novelty;
+import com.tang.understander.rest.GsonRequest;
+import com.tang.understander.rest.dto.NoveltyDTO;
+import com.tang.understander.utils.DateTimeUtil;
+import com.tang.understander.view.DropDownListView;
 
 
 public class NoveltyFragment  extends Fragment {
@@ -34,10 +35,13 @@ public class NoveltyFragment  extends Fragment {
 	private NoveltyListAdapter mAdapter;
 	private DropDownListView lvNoveltyList;
 	private ArrayList<Novelty> noveltyList = new ArrayList<Novelty>();
+	RequestQueue requestQueue;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		 //初始化
+        requestQueue = Volley.newRequestQueue(getActivity());
 		setHasOptionsMenu(true);
 	}
 	
@@ -93,59 +97,40 @@ public class NoveltyFragment  extends Fragment {
 
 	
 	private void initData() {
-		QueryNoveltyReq reqData = new QueryNoveltyReq();
-		
-		reqData.setCurrentDay(DateTimeUtil.getYmd());
-
-		MyStringRequest req = new MyStringRequest(Method.GET, reqData.getAllUrl(),
-				new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						Log.v(TAG, "Response: " + response);
-						checkResponse(response);
-						lvNoveltyList.onDropDownComplete();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						lvNoveltyList.onDropDownComplete();
-					}
-				});
-
-		RequestController.getInstance().addToRequestQueue(req, TAG);
+		postRequest();
 	}
 	
 	
-	private void checkResponse(String response) {
-		try {
-			QueryNoveltyResp respData = new QueryNoveltyResp(response);
-			if (respData.getMsgFlag()==AppConstant.novelty_query_success) {
-				doSuccess(respData);
-			} 
-			else{
-				Toast.makeText(getActivity(), "解析错误", Toast.LENGTH_LONG).show();
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "Failed to parser response data! \r\n" + e);
-		}
-	}
-	
-	private void doSuccess(QueryNoveltyResp respData) {
-		if(noveltyList!=null && noveltyList.size() > 0){
-			noveltyList.clear();
-		}
+	private void postRequest(){
 		
-		noveltyList.addAll(0, respData.getResponse());
-//		NoveltyDBAdapter dbAdapter = new NoveltyDBAdapter();
-		try {
-//			dbAdapter.open();
-//			dbAdapter.addServiceNovelty(respData.getResponse());
-
-		} catch (Exception e) {
-			Log.e(TAG, "Failed to operate database: " + e);
-		} finally {
-//			dbAdapter.close();
-		}
+		Map<String,String> m = new HashMap<String,String>();
+		
+		 Gson gson = new Gson();
+		 NoveltyDTO dto = new NoveltyDTO();
+         dto.setEntityType("Novelty");
+         dto.setTag("Novelty");
+         dto.setUpdateTime(DateTimeUtil.getYmd());
+         String requeststr = gson.toJson(dto);
+		 m.put("content", requeststr);
+		
+		
+		GsonRequest<Novelty> gsonRequest = new GsonRequest<Novelty>(  
+				AppConstant.BASE_URL, Novelty.class, m,
+		         new Response.Listener<Novelty>() {  
+		            @Override  
+		            public void onResponse(Novelty novelty) {  
+//		                WeatherInfo weatherInfo = weather.getWeatherinfo();  
+//		                Log.d("TAG", "city is " + weatherInfo.getCity());  
+//		                Log.d("TAG", "temp is " + weatherInfo.getTemp());  
+//		                Log.d("TAG", "time is " + weatherInfo.getTime());  
+		            }  
+		        }, new Response.ErrorListener() {  
+		            @Override  
+		            public void onErrorResponse(VolleyError error) {  
+		                Log.e("TAG", error.getMessage(), error);  
+		            }  
+		        });  
+		requestQueue.add(gsonRequest);  
 	}
 
 	
