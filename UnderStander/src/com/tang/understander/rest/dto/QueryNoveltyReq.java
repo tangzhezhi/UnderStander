@@ -29,7 +29,7 @@ public class QueryNoveltyReq extends BaseRequest {
 
 	@Override
 	public String getPath() {
-		return AppConstant.BASE_URL + "mobile/queryNovelty";
+		return AppConstant.BASE_URL;
 	}
 
 	@Override
