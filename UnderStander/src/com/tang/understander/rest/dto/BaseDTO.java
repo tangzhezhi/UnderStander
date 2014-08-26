@@ -11,4 +11,6 @@ public class BaseDTO {
 	public void setEntityType(String entityType) {
 		this.entityType = entityType;
 	}
+	
+	
 }

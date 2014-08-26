@@ -11,7 +11,7 @@ public class Novelty implements Serializable {
 	private String id;
 	private String title;
 	private String content;
-	private String updateTime;
+	private String updatetime;
 	private String tag;
 	public String getId() {
 		return id;
@@ -31,11 +31,12 @@ public class Novelty implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getUpdateTime() {
-		return updateTime;
+	
+	public String getUpdatetime() {
+		return updatetime;
 	}
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(String updatetime) {
+		this.updatetime = updatetime;
 	}
 	public String getTag() {
 		return tag;

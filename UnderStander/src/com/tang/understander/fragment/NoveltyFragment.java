@@ -3,11 +3,14 @@ package com.tang.understander.fragment;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,14 +24,17 @@ import android.view.ViewGroup;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.tang.understander.R;
 import com.tang.understander.adapter.NoveltyListAdapter;
 import com.tang.understander.common.AppConstant;
 import com.tang.understander.entity.Novelty;
 import com.tang.understander.rest.dto.NoveltyDTO;
+import com.tang.understander.rest.dto.PageDTO;
 import com.tang.understander.utils.DateTimeUtil;
 import com.tang.understander.view.DropDownListView;
 import com.tang.understander.view.DropDownListView.OnDropDownListener;
@@ -106,6 +112,7 @@ public class NoveltyFragment  extends Fragment {
 
 	
 	private void initData() throws UnsupportedEncodingException {
+		showMsgUi();
 		postRequest();
 	}
 	
@@ -128,19 +135,67 @@ public class NoveltyFragment  extends Fragment {
 		 
 		 AsyncHttpClient client = new AsyncHttpClient();
 		 StringEntity stringEntity = new StringEntity(requeststr);  
-		 client.post(getActivity(),AppConstant.BASE_URL, stringEntity, "application/json", new AsyncHttpResponseHandler(){
+		 client.post(getActivity(),AppConstant.BASE_URL, stringEntity, "application/json", new JsonHttpResponseHandler(){
 
 			@Override
-			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-					Throwable arg3) {
+			public void onFailure(int statusCode, Header[] headers,
+					String responseString, Throwable throwable) {
+				super.onFailure(statusCode, headers, responseString, throwable);
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONArray errorResponse) {
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					Throwable throwable, JSONObject errorResponse) {
+				super.onFailure(statusCode, headers, throwable, errorResponse);
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONArray response) {
+				super.onSuccess(statusCode, headers, response);
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					JSONObject response) {
+				super.onSuccess(statusCode, headers, response);
+				if(response!=null){
+					
+					Gson json = new Gson();
+					PageDTO d =  json.fromJson(response.toString(), PageDTO.class);
+
+					if(d!=null){
+						noveltyList = (ArrayList<Novelty>) json.fromJson(json.toJson(d.getData()),  
+								new TypeToken<List<Novelty>>() {}.getType());
+						
+						mAdapter = new NoveltyListAdapter(mView.getContext(), noveltyList);
+						lvNoveltyList.setAdapter(mAdapter);
+						mAdapter.notifyDataSetChanged();
+					}
+
+				}
 				
 			}
 
 			@Override
-			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-				
+			public void onSuccess(int statusCode, Header[] headers,
+					String responseString) {
+				super.onSuccess(statusCode, headers, responseString);
 			}
-				 
+
+			@Override
+			protected Object parseResponse(byte[] responseBody)
+					throws JSONException {
+				return super.parseResponse(responseBody);
+			}
+			 
 		});
 		 
 		 

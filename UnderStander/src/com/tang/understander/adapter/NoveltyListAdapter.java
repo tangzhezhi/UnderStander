@@ -60,7 +60,7 @@ public class NoveltyListAdapter  extends BaseAdapter {
 
 		Novelty novelty = mNoveltyList.get(pos);
 		if (novelty != null) {
-			holder.tvTime.setText(DateTimeUtil.toStandardTime(novelty.getUpdateTime()));
+			holder.tvTime.setText(DateTimeUtil.toStandardTime(novelty.getUpdatetime()));
 			holder.tvTitle.setText(novelty.getTitle());
 			holder.tvContent.setText(novelty.getContent());
 		}
