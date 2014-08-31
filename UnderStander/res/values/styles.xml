@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
     </style>
@@ -35,12 +35,20 @@
         <item name="android:headerDividersEnabled">false</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:scrollingCache">false</item>
-        <item name="android:scrollbars">none</item>
         <item name="android:smoothScrollbar">true</item>
     </style>
     
     <style name="NoSelectorList" parent="@style/List">
         <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+    
+    <style name="HasScrollBarList" parent="@style/List">
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:transcriptMode">alwaysScroll</item>
+         
     </style>
    
    	<style name="weekName">

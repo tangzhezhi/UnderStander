@@ -1,8 +1,15 @@
 package com.tang.understander.common;
 
 public class AppConstant {
-	public static final String BASE_URL = "http://192.168.1.101:9999/";
+	public static final String BASE_URL = "http://192.168.1.100:9999/";
 	public static final int DEFAULT_PAGESIZE = 15;
+	
+	public static final class PullType {
+		public static final int No = 0;
+		public static final int Up = 1;
+		public static final int Down = 2;
+	}
+	
 	
 	public static final class Ack {
 		public static final int SUCCESS = 0;

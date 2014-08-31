@@ -3,6 +3,9 @@ package com.tang.understander.activity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import org.joda.time.DateTime;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -157,41 +160,7 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 					return MainActivity.this.gestureDetector.onTouchEvent(event);
 				}
 			});           
-			
-			
-			gridView.setOnItemLongClickListener(new OnItemLongClickListener (){
 
-				@Override
-				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-						int position, long arg3) {
-					
-					  //点击任何一个item，得到这个item的日期(排除点击的是周日到周六(点击不响应))
-					  int startPosition = calV.getStartPositon();
-					  int endPosition = calV.getEndPosition();
-					  if(startPosition <= position+7  && position <= endPosition-7){
-						  String scheduleDay = calV.getDateByClickItem(position).split("\\.")[0];  //这一天的阳历
-						  //String scheduleLunarDay = calV.getDateByClickItem(position).split("\\.")[1];  //这一天的阴历
-		                  String scheduleYear = calV.getShowYear();
-		                  String scheduleMonth = (Integer.valueOf(calV.getShowMonth())>10)?calV.getShowMonth():("0"+calV.getShowMonth());
-		                  scheduleDay = (Integer.valueOf(scheduleDay)>10)?scheduleDay:("0"+scheduleDay);
-		                  
-			              ruzhuTime=scheduleMonth+"月"+scheduleDay+"日";	                  
-		                  lidianTime=scheduleMonth+"月"+scheduleDay+"日";       
-		                  
-		                  selectDate = scheduleYear+scheduleMonth+scheduleDay;
-		                  
-			                Intent intent=new Intent();
-			                intent.addCategory("org.tang.exam.activity.DayHaveStorysActivity");
-			                intent.setClass(MainActivity.this, DayHaveStorysActivity.class);
-			                intent.putExtra("DayHaveStorysActivity.selectDate", selectDate);
-			                startActivity(intent);
-		                }
-					
-					return true;
-				}
-				
-			});
-			
 			
 			gridView.setOnItemClickListener(new OnItemClickListener() {
 	            //gridView中的每一个item的点击事件
@@ -213,10 +182,17 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 			              ruzhuTime=scheduleMonth+"月"+scheduleDay+"日";	                  
 		                  lidianTime=scheduleMonth+"月"+scheduleDay+"日";       
 		                  
-		                  selectDate = scheduleYear+scheduleMonth+scheduleDay;
+		                  selectDate = scheduleYear+"-"+scheduleMonth+"-"+scheduleDay;
 		                  
-//						  initDayTask();
+		                  DateTime dateTime = new DateTime(selectDate);
+		                  
+			                Intent intent=new Intent();
+			                intent.addCategory("org.tang.exam.activity.DayHaveStorysActivity");
+			                intent.setClass(MainActivity.this, DayHaveStorysActivity.class);
+			                intent.putExtra("DayHaveStorysActivity.selectDate", dateTime);
+			                startActivity(intent);
 		                }
+					
 				}
 				
 			});

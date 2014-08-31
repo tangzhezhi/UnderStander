@@ -7,6 +7,9 @@
     <string name="drop_down_list_header_loading_text">加载中&#8230;</string>
     <string name="drop_down_list_footer_default_text">更多</string>
     <string name="drop_down_list_footer_loading_text">加载中&#8230;</string>
-    <string name="drop_down_list_footer_no_more_text">没有更多了</string>
+    
+    <string name="drop_down_list_footer_no_more_text">没有了，亲，到最后一页了</string>
+    
+     <string name="click_down_list_header_no_more_text">没有了，亲，到首页了</string>
 
 </resources>

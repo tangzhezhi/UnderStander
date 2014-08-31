@@ -8,10 +8,12 @@
 
     <com.tang.understander.view.DropDownListView
         android:id="@+id/lv_list"
-        style="@style/NoSelectorList"
+        style="@style/HasScrollBarList"
         android:paddingBottom="0.0dip"
+        android:stackFromBottom="true" 
+        android:transcriptMode="normal"
         listViewAttr:isAutoLoadOnBottom="false"
         listViewAttr:isDropDownStyle="true"
-        listViewAttr:isOnBottomStyle="false" />
+        listViewAttr:isOnBottomStyle="true" />
 
 </LinearLayout>

@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/gson.jar"/>
 	<classpathentry kind="lib" path="libs/volley.jar"/>
 	<classpathentry kind="lib" path="libs/android-async-http-1.4.5.jar"/>
+	<classpathentry kind="lib" path="libs/joda-time-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -1,8 +1,10 @@
 package com.tang.understander.adapter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,12 @@ import com.tang.understander.utils.DateTimeUtil;
 
 
 public class NoveltyListAdapter  extends BaseAdapter {
-
+	private static final String TAG = "NoveltyListAdapter";
+	
 	private LayoutInflater mInflater;
-	private ArrayList<Novelty> mNoveltyList = new ArrayList<Novelty>();
+	private LinkedList<Novelty> mNoveltyList = new LinkedList<Novelty>();
 
-	public NoveltyListAdapter(Context context, ArrayList<Novelty> noticeList) {
+	public NoveltyListAdapter(Context context, LinkedList<Novelty> noticeList) {
 		super();
 		if(noticeList!=null && noticeList.size() > 0){
 			mNoveltyList = noticeList;
@@ -50,7 +53,6 @@ public class NoveltyListAdapter  extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.item_novelty, null);
 
 			holder = new ViewHolder();
-			holder.tvTime = (TextView) convertView.findViewById(R.id.tv_create_time);
 			holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
 			holder.tvContent = (TextView) convertView.findViewById(R.id.tv_content);
 			convertView.setTag(holder);
@@ -60,11 +62,10 @@ public class NoveltyListAdapter  extends BaseAdapter {
 
 		Novelty novelty = mNoveltyList.get(pos);
 		if (novelty != null) {
-			holder.tvTime.setText(DateTimeUtil.toStandardTime(novelty.getUpdatetime()));
 			holder.tvTitle.setText(novelty.getTitle());
 			holder.tvContent.setText(novelty.getContent());
 		}
-
+		
 		return convertView;
 	}
 
