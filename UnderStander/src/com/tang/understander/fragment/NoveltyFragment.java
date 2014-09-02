@@ -55,8 +55,6 @@ public class NoveltyFragment  extends Fragment {
 	RequestQueue requestQueue;
 	private DateTime currentDay = new DateTime();
 	private	ArrayList<Novelty> nlist = new ArrayList<Novelty>();
-	private int scrolledX;
-	private int scrolledY;
 	private ViewGroup viewGroup;
 	
 	@Override
@@ -205,18 +203,15 @@ public class NoveltyFragment  extends Fragment {
 						nlist = (ArrayList<Novelty>) json.fromJson(json.toJson(d.getData()),  
 								new TypeToken<List<Novelty>>() {}.getType());
 						
-						
-						int currentPosition = lvNoveltyList.getFirstVisiblePosition();
-						
 						if(nlist.size() > 0){
 							if(pullType == PullType.Down){
-								noveltyList.addLast(nlist.get(0));
-							}
-							else if(pullType == PullType.Up){
 								noveltyList.addFirst(nlist.get(0));
 							}
-							else{
+							else if(pullType == PullType.Up){
 								noveltyList.addLast(nlist.get(0));
+							}
+							else{
+								noveltyList.addFirst(nlist.get(0));
 							}
 						}
 						
@@ -229,19 +224,18 @@ public class NoveltyFragment  extends Fragment {
 				
 				
 				if(pullType == PullType.Down){
+					lvNoveltyList.setSelection(lvNoveltyList.getFirstVisiblePosition());
 					lvNoveltyList.onDropDownComplete();
 				}
 				else if(pullType == PullType.Up){
+					lvNoveltyList.setSelection(lvNoveltyList.getCount()-1);
 					lvNoveltyList.onBottomComplete();
 					
 				}
-				else{
-					lvNoveltyList.onBottomComplete();
+				else if(pullType == PullType.No){
+					lvNoveltyList.setSelection(lvNoveltyList.getFirstVisiblePosition());
 					lvNoveltyList.onDropDownComplete();
 				}
-				
-				
-
 				
 			}
 
@@ -282,7 +276,6 @@ public class NoveltyFragment  extends Fragment {
 						lvNoveltyList.onDropDownComplete();
 						return;
 					}
-					lvNoveltyList.setSelection(lvNoveltyList.getFirstVisiblePosition());
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -303,35 +296,12 @@ public class NoveltyFragment  extends Fragment {
 					
 					Log.d(TAG, "lvNoveltyList.getCount:::"+lvNoveltyList.getCount());
 					
-					mAdapter.notifyDataSetChanged();
-					 lvNoveltyList.setSelection(lvNoveltyList.getCount()-1);
-					
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		
-		
-//		lvNoveltyList.setOnScrollListener(new OnScrollListener() {
-//			
-//			@Override
-//			public void onScrollStateChanged(AbsListView view, int  scrollState) {
-//				// 不滚动时保存当前滚动到的位置
-//				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-//					if (noveltyList != null) {
-//						scrolledX = view.getScrollX();
-//						scrolledY = lvNoveltyList.getChildAt(0).getTop();
-//						Log.d(TAG, "getScrollY:::"+lvNoveltyList.getChildAt(0).getTop());
-//					}
-//				}
-//			}
-//			
-//			@Override
-//			public void onScroll(AbsListView view,  int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				
-//			}
-//		});
+
 
 	}
 

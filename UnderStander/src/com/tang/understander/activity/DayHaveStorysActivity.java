@@ -37,7 +37,7 @@ public class DayHaveStorysActivity extends BaseActionBarActivity {
 		//显示在顶部
 		bar.setDisplayHomeAsUpEnabled(true);
 		
-		Log.d(TAG, "时间：："+getIntent().getStringExtra("DayHaveStorysActivity.selectDate"));
+		Log.d(TAG, "时间：："+getIntent().getSerializableExtra("DayHaveStorysActivity.selectDate"));
 		
 		//在导航上添加上公告页面--ViewPager
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
