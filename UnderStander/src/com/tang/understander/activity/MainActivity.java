@@ -1,5 +1,6 @@
 package com.tang.understander.activity;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,31 +11,34 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.GestureDetector.OnGestureListener;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.tang.understander.R;
 import com.tang.understander.adapter.CalendarAdapter;
 import com.tang.understander.base.BaseActionBarActivity;
 import com.tang.understander.entity.TaskCurrentDay;
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
+import com.tencent.android.tpush.common.Constants;
+import com.tencent.android.tpush.service.cache.CacheManager;
 
 public class MainActivity  extends BaseActionBarActivity  implements OnGestureListener{
 	private GestureDetectorCompat gestureDetector = null;
@@ -54,6 +58,7 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 	private ArrayList<TaskCurrentDay> taskCurrentDayList = new ArrayList<TaskCurrentDay>();
 	private LinearLayout layout_left;
 	private LinearLayout layout_right;
+	Message m = null;
 	
 	public MainActivity() {
 		Date date = new Date();
@@ -65,10 +70,61 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 	}
 	
 	
+	private void registerPush(){
+		// 1.获取设备Token
+				Handler handler = new HandlerExtension(MainActivity.this);
+				m = handler.obtainMessage();
+				//注册接口
+				XGPushManager.registerPush(getApplicationContext(),
+						new XGIOperateCallback() {
+							@Override
+							public void onSuccess(Object data, int flag) {
+								Log.w(Constants.LogTag,
+										"+++ register push sucess. token:" + data);
+								m.obj = "+++ register push sucess. token:" + data;
+								m.sendToTarget();
+								CacheManager.getRegisterInfo();
+							}
+
+							@Override
+							public void onFail(Object data, int errCode, String msg) {
+								Log.w(Constants.LogTag,
+										"+++ register push fail. token:" + data
+												+ ", errCode:" + errCode + ",msg:"
+												+ msg);
+
+								m.obj = "+++ register push fail. token:" + data
+										+ ", errCode:" + errCode + ",msg:" + msg;
+								m.sendToTarget();
+							}
+						});
+	}
+	
+	
+	private static class HandlerExtension extends Handler {
+		WeakReference<MainActivity> mActivity;
+
+		HandlerExtension(MainActivity activity) {
+			mActivity = new WeakReference<MainActivity>(activity);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			MainActivity theActivity = mActivity.get();
+			if (msg != null) {
+				Log.w(Constants.LogTag, msg.obj.toString()+XGPushConfig.getToken(theActivity));
+			}
+		}
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		registerPush();
+		
 		setContentView(R.layout.calendar);
 		
 		ActionBar bar = getSupportActionBar();
