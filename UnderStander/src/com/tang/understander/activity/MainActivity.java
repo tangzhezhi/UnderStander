@@ -70,6 +70,24 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 	}
 	
 	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		XGPushManager.onActivityStarted(this);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		XGPushManager.onActivityStoped(this);
+	}
+	
 	private void registerPush(){
 		// 1.获取设备Token
 				Handler handler = new HandlerExtension(MainActivity.this);

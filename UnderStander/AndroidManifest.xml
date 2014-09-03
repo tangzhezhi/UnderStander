@@ -101,6 +101,12 @@
             </intent-filter>
         </activity>
         
+        <service android:name="com.tang.understander.service.UpdateService">
+              <intent-filter >
+                  <action android:name="com.tang.understander.activity.DayHaveStorysActivity"/>
+              </intent-filter>
+        </service>
+        
           <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"
