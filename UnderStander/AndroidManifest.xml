@@ -101,10 +101,7 @@
             </intent-filter>
         </activity>
         
-        <service android:name="com.tang.understander.service.UpdateService">
-              <intent-filter >
-                  <action android:name="com.tang.understander.activity.DayHaveStorysActivity"/>
-              </intent-filter>
+        <service android:name="com.tang.understander.service.UpdateService"   android:enabled="true" android:exported="true">
         </service>
         
           <!-- 【必须】 信鸽receiver广播接收 -->

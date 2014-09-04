@@ -7,11 +7,15 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
@@ -29,11 +33,13 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tang.understander.R;
 import com.tang.understander.adapter.CalendarAdapter;
 import com.tang.understander.base.BaseActionBarActivity;
 import com.tang.understander.entity.TaskCurrentDay;
+import com.tang.understander.service.UpdateService;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
@@ -86,6 +92,20 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 	protected void onPause() {
 		super.onPause();
 		XGPushManager.onActivityStoped(this);
+	}
+	
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+	
+	
+	
+
+	private void startServer(){
+		Intent intent = new Intent(MainActivity.this,UpdateService.class);
+		startService(intent);
 	}
 	
 	private void registerPush(){
@@ -142,6 +162,8 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 		super.onCreate(savedInstanceState);
 		
 		registerPush();
+		
+		startServer();
 		
 		setContentView(R.layout.calendar);
 		
@@ -251,7 +273,7 @@ public class MainActivity  extends BaseActionBarActivity  implements OnGestureLi
 						  //String scheduleLunarDay = calV.getDateByClickItem(position).split("\\.")[1];  //这一天的阴历
 		                  String scheduleYear = calV.getShowYear();
 		                  String scheduleMonth = (Integer.valueOf(calV.getShowMonth())>10)?calV.getShowMonth():("0"+calV.getShowMonth());
-		                  scheduleDay = (Integer.valueOf(scheduleDay)>10)?scheduleDay:("0"+scheduleDay);
+		                  scheduleDay = (Integer.valueOf(scheduleDay)>9)?scheduleDay:("0"+scheduleDay);
 		                  
 			              ruzhuTime=scheduleMonth+"月"+scheduleDay+"日";	                  
 		                  lidianTime=scheduleMonth+"月"+scheduleDay+"日";       

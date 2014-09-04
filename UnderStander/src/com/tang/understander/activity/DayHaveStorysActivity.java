@@ -29,21 +29,6 @@ public class DayHaveStorysActivity extends BaseActionBarActivity {
 	TabsAdapter mTabsAdapter;
 	ViewPager mViewPager;
 	
-	UpdateService.MyBinder binder;
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {            
-            Log.i(TAG, "--Service Disconnected--");
-        }
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG, "--Service Connected--");
-            // 取得Service对象中的Binder对象
-            binder = (UpdateService.MyBinder) service;
-        }
-    };
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -61,10 +46,6 @@ public class DayHaveStorysActivity extends BaseActionBarActivity {
 		
 		Log.d(TAG, "时间：："+getIntent().getSerializableExtra("DayHaveStorysActivity.selectDate"));
 		
-        final Intent intent = new Intent();
-        // 指定开启服务的action
-        intent.setAction("com.tang.understander.activity.DayHaveStorysActivity");
-		bindService(intent, conn, Service.BIND_AUTO_CREATE);
 		
 		//在导航上添加上公告页面--ViewPager
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
